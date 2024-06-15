@@ -28,4 +28,4 @@ app.register_blueprint(blueprint=attendance_api, url_prefix='/attendance')
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, host='0.0.0.0')
