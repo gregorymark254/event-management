@@ -28,3 +28,14 @@ def get_attendance():
         return {'attendance': schema.dump(events), 'count': count}, 201
     except ValidationError as err:
         return err
+
+
+@api.route('/<int:event_id>', methods=['GET'])
+def get_attendance_by_event_id(event_id):
+    try:
+        event = Attendance.query.filter_by(event_id=event_id).all()
+        schema = AttendanceSchema(many=True)
+        count = len(event)
+        return {'attendance': schema.dump(event), 'count': count}, 201
+    except ValidationError as err:
+        return err

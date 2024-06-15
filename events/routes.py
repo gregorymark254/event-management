@@ -35,8 +35,7 @@ def get_event_by_id(event_id):
     event = Event.query.get(event_id)
     schema = EventSchema()
     event = schema.dump(event)
-    count = len(event)
-    return {'event': event, 'count': count}, 201
+    return {'event': event}, 201
 
 
 @api.route('/update/<int:event_id>', methods=['PUT'])
