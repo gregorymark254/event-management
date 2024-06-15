@@ -18,6 +18,7 @@ def get_users():
 
 
 @api.route('/update/<int:user_id>', methods=['PUT'])
+@jwt_required()
 def update_user(user_id):
     schema = UserSchema(partial=True)
     user = User.query.get_or_404(user_id)
@@ -30,6 +31,7 @@ def update_user(user_id):
 
 
 @api.route('/delete/<int:user_id>', methods=['DELETE'])
+@jwt_required()
 def delete_user(user_id):
     user = User.query.get_or_404(user_id)
     db.session.delete(user)

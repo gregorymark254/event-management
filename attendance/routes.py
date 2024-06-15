@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from flask_jwt_extended import jwt_required
 from marshmallow import ValidationError
 
 from events import Attendance
@@ -9,6 +10,7 @@ api = Blueprint('attendance', __name__)
 
 
 @api.route('/', methods=['POST'])
+@jwt_required()
 def create_attendance():
     schema = AttendanceSchema()
     attendance = schema.load(request.json)
@@ -20,6 +22,7 @@ def create_attendance():
 
 
 @api.route('/', methods=['GET'])
+@jwt_required()
 def get_attendance():
     try:
         events = Attendance.query.all()
@@ -31,6 +34,7 @@ def get_attendance():
 
 
 @api.route('/<int:event_id>', methods=['GET'])
+@jwt_required()
 def get_attendance_by_event_id(event_id):
     try:
         event = Attendance.query.filter_by(event_id=event_id).all()

@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from flask_jwt_extended import jwt_required
 from marshmallow.exceptions import ValidationError
 
 from events.models import Event
@@ -9,6 +10,7 @@ api = Blueprint('events', __name__)
 
 
 @api.route('/', methods=['POST'])
+@jwt_required()
 def add_events():
     schema = EventSchema()
     events = schema.load(request.json)
@@ -20,6 +22,7 @@ def add_events():
 
 
 @api.route('/', methods=['GET'])
+@jwt_required()
 def get_events():
     try:
         events = Event.query.all()
@@ -31,6 +34,7 @@ def get_events():
 
 
 @api.route('/<int:event_id>', methods=['GET'])
+@jwt_required()
 def get_event_by_id(event_id):
     event = Event.query.get(event_id)
     schema = EventSchema()
@@ -39,6 +43,7 @@ def get_event_by_id(event_id):
 
 
 @api.route('/update/<int:event_id>', methods=['PUT'])
+@jwt_required()
 def update_event(event_id):
     schema = EventSchema(partial=True)
     event = Event.query.get(event_id)
@@ -50,6 +55,7 @@ def update_event(event_id):
 
 
 @api.route('/delete/<int:event_id>', methods=['DELETE'])
+@jwt_required()
 def delete_event(event_id):
     event = Event.query.get_or_404(event_id)
     db.session.delete(event)
