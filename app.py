@@ -13,7 +13,7 @@ jwt.init_app(app)
 cors.init_app(app, resources={r"/*": {
     "origins": [
         "http://localhost:3000",
-        "https://eventsmanage.vercel.app/"
+        "https://eventsmanage.vercel.app"
     ]
 }})
 
