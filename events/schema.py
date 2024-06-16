@@ -10,12 +10,6 @@ from events.models import Attendance, Event
 class EventSchema(ma.SQLAlchemyAutoSchema):
     event_name = String(required=True, validate=validate.Length(min=5))
 
-    # @validates_schema
-    # def validate_event_name(self, data, **kwargs):
-    #     event_name = data.get("event_name")
-    #     if Event.query.filter_by(event_name=event_name).count():
-    #         raise ValidationError(f'Event {event_name} is already registered')
-
     class Meta:
         model = Event
         load_instance = True
