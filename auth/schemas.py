@@ -1,4 +1,4 @@
-from marshmallow import validate, validates_schema
+from marshmallow import validate, validates_schema, ValidationError
 from marshmallow.fields import String
 from extensions import ma
 from auth.models import User
@@ -13,7 +13,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         email = data.get("email")
 
         if User.query.filter_by(email=email).count():
-            raise Exception(f'Email {email} already registered')
+            raise ValidationError({'error': f'Email {email} already registered'})
 
     class Meta:
         model = User

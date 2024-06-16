@@ -29,7 +29,7 @@ class AttendanceSchema(ma.SQLAlchemyAutoSchema):
     def validate_phone(self, data, **kwargs):
         phone = data.get("phone")
         if Attendance.query.filter_by(phone=phone).count():
-            raise ValidationError('Phone already exist')
+            raise ValidationError({'error': 'Phone number already taken'})
 
     class Meta:
         model = Attendance

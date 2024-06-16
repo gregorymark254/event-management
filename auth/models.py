@@ -29,3 +29,7 @@ class User(db.Model):
 
     def check_password(self, value):
         return bcrypt.checkpw(value.encode('utf-8'), self._password.encode('utf-8'))
+
+    @staticmethod
+    def check_email(value):
+        return User.query.filter_by(email=value).first() is not None

@@ -1,6 +1,5 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
-from marshmallow import ValidationError
 
 from events import Attendance
 from events.schema import AttendanceSchema
@@ -24,22 +23,18 @@ def create_attendance():
 @api.route('/', methods=['GET'])
 @jwt_required()
 def get_attendance():
-    try:
-        events = Attendance.query.all()
-        schema = AttendanceSchema(many=True)
-        count = len(events)
-        return {'attendance': schema.dump(events), 'count': count}, 201
-    except ValidationError as err:
-        return err
+    events = Attendance.query.all()
+    schema = AttendanceSchema(many=True)
+    count = len(events)
+
+    return {'attendance': schema.dump(events), 'count': count}, 201
 
 
 @api.route('/<int:event_id>', methods=['GET'])
 @jwt_required()
 def get_attendance_by_event_id(event_id):
-    try:
-        event = Attendance.query.filter_by(event_id=event_id).all()
-        schema = AttendanceSchema(many=True)
-        count = len(event)
-        return {'attendance': schema.dump(event), 'count': count}, 201
-    except ValidationError as err:
-        return err
+    event = Attendance.query.filter_by(event_id=event_id).all()
+    schema = AttendanceSchema(many=True)
+    count = len(event)
+
+    return {'attendance': schema.dump(event), 'count': count}, 201

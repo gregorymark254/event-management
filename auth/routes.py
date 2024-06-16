@@ -11,17 +11,14 @@ api = Blueprint('auth', __name__)
 @api.route('/register', methods=['POST'])
 def register():
     if not request.is_json:
-        return {"msg": "Missing JSON in request"}, 400
+        return {"error": "Missing JSON in request"}, 400
 
-    try:
-        schema = UserSchema()
-        user = schema.load(request.json)
-        db.session.add(user)
-        db.session.commit()
-    except Exception as err:
-        return {"msg": str(err)}, 400
+    schema = UserSchema()
+    user = schema.load(request.json)
+    db.session.add(user)
+    db.session.commit()
 
-    return {"msg": f"User {user.email} Registered successfully"}, 201
+    return {"message": f"User {user.email} Registered successfully"}, 201
 
 
 @api.route('/login', methods=['POST'])
@@ -30,11 +27,15 @@ def login():
     password = request.json.get('password')
 
     if not email or not password:
-        return {"msg": "Missing email or password"}, 400
+        return {"error": "Invalid email or password"}, 400
 
     user = User.query.filter_by(email=email).first()
-    if user.check_password(password):
+    if user and user.check_password(password):
         access_token = create_access_token(identity=user.id)
-        return {"access_token": access_token}, 200
+        user_data = {
+            'username': user.username,
+            'role': user.role.value,
+        }
+        return {"access_token": access_token, "user": user_data}, 200
     else:
-        return {'message': 'Incorrect password'}, 401
+        return {'error': 'Incorrect email or password'}, 401

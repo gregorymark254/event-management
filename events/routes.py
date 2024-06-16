@@ -1,6 +1,5 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
-from marshmallow.exceptions import ValidationError
 
 from events.models import Event
 from events.schema import EventSchema
@@ -14,7 +13,6 @@ api = Blueprint('events', __name__)
 def add_events():
     schema = EventSchema()
     events = schema.load(request.json)
-
     db.session.add(events)
     db.session.commit()
 
@@ -24,13 +22,11 @@ def add_events():
 @api.route('/', methods=['GET'])
 @jwt_required()
 def get_events():
-    try:
-        events = Event.query.all()
-        schema = EventSchema(many=True)
-        count = len(events)
-        return {'events': schema.dump(events), 'count': count}, 201
-    except ValidationError as err:
-        return err
+    events = Event.query.all()
+    schema = EventSchema(many=True)
+    count = len(events)
+
+    return {'events': schema.dump(events), 'count': count}, 201
 
 
 @api.route('/<int:event_id>', methods=['GET'])

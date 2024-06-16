@@ -1,4 +1,7 @@
-from flask import Flask
+from flask import Flask, jsonify
+from marshmallow import ValidationError
+from sqlalchemy.exc import SQLAlchemyError
+
 from auth.routes import api
 from events.routes import api as events_api
 from users.routes import api as users_api
@@ -30,5 +33,20 @@ app.register_blueprint(blueprint=users_api, url_prefix='/users')
 app.register_blueprint(blueprint=attendance_api, url_prefix='/attendance')
 
 
+# handle errors in json format
+@app.errorhandler(ValidationError)  # marshmallow validation errors
+def validation_error(e):
+    return jsonify(e.messages), 400
+
+
+@app.errorhandler(SQLAlchemyError)  # sqlalchemy errors
+def sqlalchemy_error(e):
+    error_message = str(e)
+    response = {
+        'message': error_message,
+    }
+    return jsonify(response), 500
+
+
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run()
