@@ -1,5 +1,5 @@
 from marshmallow import validate, validates_schema, ValidationError
-from marshmallow.fields import String, Function
+from marshmallow.fields import String
 from extensions import ma
 from auth.models import User
 
@@ -7,7 +7,6 @@ from auth.models import User
 class UserSchema(ma.SQLAlchemyAutoSchema):
     email = String(required=True, validate=validate.Email())
     password = String(required=True, validate=validate.Length(min=8))
-    # role = Function(lambda obj: obj.role.value)
 
     @validates_schema
     def validate_email(self, data, **kwargs):
