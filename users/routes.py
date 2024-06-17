@@ -1,25 +1,28 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
 
-from auth.models import User, admin_required
+from auth.models import User
 from auth.schemas import UserSchema
 from extensions import db
+from utils import pagination
 
 api = Blueprint('users', __name__)
 
 
 @api.route('/', methods=['GET'])
 @jwt_required()
-@admin_required
 def get_users():
-    users = User.query.order_by(User.id.desc()).all()
+    users = User.query
     user_schema = UserSchema(many=True)
-    all_users = user_schema.dump(users)
-    count = len(users)
+
+    all_users = pagination(users, user_schema)
+    count = len(all_users)
+
     return {'users': all_users, 'count': count}
 
 
 @api.route('/<int:user_id>', methods=['GET'])
+@jwt_required()
 def get_user_by_id(user_id):
     user = User.query.get(user_id)
     user_schema = UserSchema()

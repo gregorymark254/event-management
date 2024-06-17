@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required
 from events.models import Event
 from events.schema import EventSchema
 from extensions import db
+from utils import pagination
 
 api = Blueprint('events', __name__)
 
@@ -22,11 +23,18 @@ def add_events():
 @api.route('/', methods=['GET'])
 @jwt_required()
 def get_events():
-    events = Event.query.all()
+    search_query = request.args.get('search')
+    events_query = Event.query
+
+    if search_query:
+        events_query = events_query.filter(Event.event_name.ilike(f"%{search_query}%"))
+
     schema = EventSchema(many=True)
+    events = pagination(events_query, schema)
+
     count = len(events)
 
-    return {'events': schema.dump(events), 'count': count}, 201
+    return {'events': events, 'count': count}, 200
 
 
 @api.route('/<int:event_id>', methods=['GET'])

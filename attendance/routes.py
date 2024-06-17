@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required
 from events import Attendance
 from events.schema import AttendanceSchema
 from extensions import db
+from utils import pagination
 
 api = Blueprint('attendance', __name__)
 
@@ -23,18 +24,22 @@ def create_attendance():
 @api.route('/', methods=['GET'])
 @jwt_required()
 def get_attendance():
-    events = Attendance.query.all()
+    attend = Attendance.query
     schema = AttendanceSchema(many=True)
-    count = len(events)
+    attendants = pagination(attend, schema)
 
-    return {'attendance': schema.dump(events), 'count': count}, 201
+    count = len(attendants)
+
+    return {'attendance': attendants, 'count': count}, 201
 
 
 @api.route('/<int:event_id>', methods=['GET'])
 @jwt_required()
 def get_attendance_by_event_id(event_id):
-    event = Attendance.query.filter_by(event_id=event_id).all()
+    event = Attendance.query.filter_by(event_id=event_id)
     schema = AttendanceSchema(many=True)
-    count = len(event)
 
-    return {'attendance': schema.dump(event), 'count': count}, 201
+    attendants = pagination(event, schema)
+    count = len(attendants)
+
+    return {'attendance': attendants, 'count': count}, 201

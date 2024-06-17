@@ -41,7 +41,7 @@ def admin_required(fn):
     def wrapper(*args, **kwargs):
         verify_jwt_in_request()
         current_user = get_jwt_identity()
-        if 'role' not in current_user or current_user['role'] != UserRoles.user.value:
+        if 'role' not in current_user or current_user['role'] != UserRoles.admin.value:
             return {'error': 'Unauthorized! Admin Only'}, 403
 
         return fn(*args, **kwargs)
