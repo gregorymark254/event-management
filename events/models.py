@@ -19,4 +19,4 @@ class Attendance(db.Model):
     phone = db.Column(db.String(255), unique=True, nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('events.event_id'), nullable=False)
 
-    event = db.relationship('Event', backref='attendance')
+    event = db.relationship('Event', backref='attendances')

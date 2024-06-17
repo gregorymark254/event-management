@@ -1,7 +1,8 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
+from sqlalchemy.orm import joinedload
 
-from events import Attendance
+from events import Attendance, Event
 from events.schema import AttendanceSchema
 from extensions import db
 from utils import pagination
