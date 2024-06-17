@@ -7,7 +7,7 @@ from auth.models import User
 class UserSchema(ma.SQLAlchemyAutoSchema):
     email = String(required=True, validate=validate.Email())
     password = String(required=True, validate=validate.Length(min=8))
-    role = Function(lambda obj: obj.role.value)
+    # role = Function(lambda obj: obj.role.value)
 
     @validates_schema
     def validate_email(self, data, **kwargs):
@@ -19,4 +19,4 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = User
         load_instance = True
-        exclude = ["_password", "password"]
+        exclude = ["_password"]
