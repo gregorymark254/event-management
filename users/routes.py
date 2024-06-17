@@ -34,7 +34,6 @@ def update_user(user_id):
     user = User.query.get_or_404(user_id)
     user = schema.load(request.json, instance=user)
 
-    db.session.add(user)
     db.session.commit()
 
     return {'user': f'User {user.email} has been updated.'}
