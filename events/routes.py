@@ -21,7 +21,6 @@ def add_events():
 
 
 @api.route('/', methods=['GET'])
-@jwt_required()
 def get_events():
     search_query = request.args.get('search')
     events_query = Event.query
@@ -32,9 +31,7 @@ def get_events():
     schema = EventSchema(many=True)
     events = pagination(events_query, schema)
 
-    count = len(events)
-
-    return {'events': events, 'count': count}, 200
+    return events
 
 
 @api.route('/<int:event_id>', methods=['GET'])

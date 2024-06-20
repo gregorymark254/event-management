@@ -19,5 +19,6 @@ def pagination(query, schema):
 
     # Serialize data using provided schema
     serialized_data = schema.dump(items)
+    total = query.count()
 
-    return serialized_data
+    return {'total': total, 'items': serialized_data}

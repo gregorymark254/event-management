@@ -1,8 +1,7 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
-from sqlalchemy.orm import joinedload
 
-from events import Attendance, Event
+from events import Attendance
 from events.schema import AttendanceSchema
 from extensions import db
 from utils import pagination
@@ -35,12 +34,10 @@ def get_attendance():
 
 
 @api.route('/<int:event_id>', methods=['GET'])
-@jwt_required()
 def get_attendance_by_event_id(event_id):
     event = Attendance.query.filter_by(event_id=event_id)
     schema = AttendanceSchema(many=True)
 
     attendants = pagination(event, schema)
-    count = len(attendants)
 
-    return {'attendance': attendants, 'count': count}, 201
+    return attendants, 201

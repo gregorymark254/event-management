@@ -11,15 +11,13 @@ api = Blueprint('users', __name__)
 
 
 @api.route('/', methods=['GET'])
-@jwt_required()
 def get_users():
     users = User.query
     user_schema = AllUserSchema(many=True)
 
     all_users = pagination(users, user_schema)
-    count = len(all_users)
 
-    return {'users': all_users, 'count': count}
+    return all_users
 
 
 @api.route('/<int:user_id>', methods=['GET'])
