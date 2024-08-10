@@ -21,6 +21,7 @@ def add_events():
 
 
 @api.route('/', methods=['GET'])
+@jwt_required()
 def get_events():
     search_query = request.args.get('search')
     events_query = Event.query
